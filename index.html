@@ -40,8 +40,8 @@
         <script src="data/Overview_4.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:18, minZoom:1
-        }).fitBounds([[38.77654826460084,-77.29088586280142],[39.00741564511604,-76.76869296200309]]);
+            zoomControl:false, maxZoom:20, minZoom:1
+        }).fitBounds([[38.8314472042518,-77.16542082548182],[38.946885604974256,-76.90432437508265]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -121,7 +121,7 @@
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
             minZoom: 1,
-            maxZoom: 18,
+            maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
@@ -220,7 +220,7 @@
             opacity: 1.0,
             attribution: '',
             minZoom: 1,
-            maxZoom: 18,
+            maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 18
         });
