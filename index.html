@@ -31,6 +31,11 @@
             margin-bottom: 2px;
             font-size: 8px; /* Smaller tick mark */
         }
+        /* Custom style for professional labels */
+        .leaflet-tile-pane .professional-labels {
+            font-family: Arial, sans-serif;
+            font-weight: normal;
+        }
         </style>
         <title></title>
     </head>
@@ -219,12 +224,13 @@
         map.addLayer(layer_NeighborhoodClusters_7);
 
         // -----------------------------------------------------------
-        // LABELS: UPDATED FOR SMALLER SIZE AND LESS BLUR
+        // LABELS: UPDATED FOR SMALLER SIZE AND PROFESSIONAL FONT
         // -----------------------------------------------------------
         map.createPane('pane_LabelsWhiteText_8');
         map.getPane('pane_LabelsWhiteText_8').style.zIndex = 408;
         
-        var layer_LabelsWhiteText_8 = L.tileLayer('https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@2x.png', {
+        // Changed to Positron (light) labels for professional look
+        var layer_LabelsWhiteText_8 = L.tileLayer('https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}@2x.png', {
             pane: 'pane_LabelsWhiteText_8',
             opacity: 1.0,
             attribution: '',
@@ -232,21 +238,16 @@
             maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 18,
-            
             // HACK TO REDUCE TEXT SIZE:
             // We tell Leaflet the tiles are 512px (Retina) but load standard tiles, 
             // effectively scaling the text down by 50%.
             tileSize: 512, 
-            zoomOffset: -1 
+            zoomOffset: -1,
+            className: 'professional-labels' // Add custom class for font styling
         });
         map.addLayer(layer_LabelsWhiteText_8);
         
-        // CSS FILTER UPDATE: 
-        // Reduced brightness/contrast to fix "wide border" blur.
-        var labelPane = map.getPane('pane_LabelsWhiteText_8');
-        if (labelPane) {
-            labelPane.style.filter = 'invert(100%) brightness(130%) contrast(130%) grayscale(100%)';
-        }
+        // CSS FILTER REMOVED: No longer inverting colors.
 
         // Overview (Unchanged)
         function pop_Overview_9(feature, layer) {
@@ -270,7 +271,7 @@
         // Layer Control
         var overlaysTree = [
             {label: '<img src="legend/Overview_9.png" /> Overview', layer: layer_Overview_9},
-            {label: "Labels - White Text", layer: layer_LabelsWhiteText_8},
+            {label: "Labels - Professional", layer: layer_LabelsWhiteText_8},
             {label: '<img src="legend/NeighborhoodClusters_7.png" /> Neighborhood Clusters', layer: layer_NeighborhoodClusters_7},
         ];
         var lay = L.control.layers.tree(null, overlaysTree,{ collapsed: true });
