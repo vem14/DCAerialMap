@@ -36,11 +36,10 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.wms.js"></script>
         <script src="js/leaflet.photon.js"></script>
-        <script src="data/Overview_4.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:28, minZoom:2
-        }).fitBounds([[38.616127386508786,-77.2167992912305],[39.229381952780166,-76.78300036170417]]);
+            zoomControl:false, maxZoom:14, minZoom:2
+        }).fitBounds([[38.816377819899095,-77.07979752753606],[38.969757172850805,-76.97134779515449]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -120,7 +119,7 @@
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
             minZoom: 2,
-            maxZoom: 28,
+            maxZoom: 14,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
@@ -133,7 +132,7 @@
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
             minZoom: 2,
-            maxZoom: 28,
+            maxZoom: 14,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
@@ -168,39 +167,7 @@
             attribution: '',
         });
         map.addLayer(layer_Ortho2010_3);
-        function pop_Overview_4(feature, layer) {
-        }
-
-        function style_Overview_4_0() {
-            return {
-                pane: 'pane_Overview_4',
-                opacity: 1,
-                color: 'rgba(247,247,247,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(150,150,150,1.0)',
-                interactive: true,
-            }
-        }
-        map.createPane('pane_Overview_4');
-        map.getPane('pane_Overview_4').style.zIndex = 404;
-        map.getPane('pane_Overview_4').style['mix-blend-mode'] = 'normal';
-        var layer_Overview_4 = new L.geoJson(json_Overview_4, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_Overview_4',
-            layerName: 'layer_Overview_4',
-            pane: 'pane_Overview_4',
-            onEachFeature: pop_Overview_4,
-            style: style_Overview_4_0,
-        });
-        bounds_group.addLayer(layer_Overview_4);
         var overlaysTree = [
-            {label: '<img src="legend/Overview_4.png" /> Overview', layer: layer_Overview_4},
             {label: "Ortho 2010", layer: layer_Ortho2010_3},
             {label: "Historic Building Info", layer: layer_HistoricBuildingInfo_2},
             {label: "Google Satellite", layer: layer_GoogleSatellite_1},
