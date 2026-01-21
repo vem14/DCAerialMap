@@ -18,7 +18,7 @@
             padding: 0;
             margin: 0;
         }
-        /* Custom styles for the slider ticks */
+        /* Custom styles for the compact slider ticks */
         .tick-container span {
             position: relative;
             text-align: center;
@@ -27,35 +27,31 @@
         .tick-container span::before {
             content: '|';
             display: block;
-            font-weight: bold;
-            margin-bottom: 2px;
-            font-size: 8px; /* Smaller tick mark */
-        }
-        /* Custom style for professional labels */
-        .leaflet-tile-pane .professional-labels {
-            font-family: Arial, sans-serif;
             font-weight: normal;
+            margin-bottom: 2px;
+            font-size: 8px; 
+            color: #888;
         }
         </style>
         <title></title>
     </head>
     <body>
         
-        <div id="slider-container" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(255,255,255,0.95); padding: 8px 15px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); text-align: center; font-family: sans-serif; width: 60%; max-width: 450px;">
+        <div id="slider-container" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(255,255,255,0.95); padding: 5px 10px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; font-family: sans-serif; width: 40%; max-width: 300px;">
             
-            <div style="margin-bottom: 5px; font-size: 12px; color: #333;">
-                Historical Imagery: <strong><span id="yearLabel" style="color: #0078A8; font-size: 14px;">2025</span></strong>
+            <div style="margin-bottom: 2px; font-size: 10px; color: #444; letter-spacing: 0.5px; text-transform: uppercase;">
+                Imagery Year: <strong><span id="yearLabel" style="color: #0078A8; font-size: 12px;">2025</span></strong>
             </div>
 
             <input type="range" id="yearRange" min="0" max="6" value="6" step="1" style="width: 100%; cursor: pointer; margin: 0;">
             
-            <div class="tick-container" style="display: flex; justify-content: space-between; margin-top: 2px; color: #666; font-size: 9px;">
+            <div class="tick-container" style="display: flex; justify-content: space-between; margin-top: 0px; color: #666; font-size: 8px;">
                 <span style="text-align: left;">2007</span>
-                <span>2008</span>
-                <span>2010</span>
-                <span>2013</span>
-                <span>2017</span>
-                <span>2021</span>
+                <span>08</span>
+                <span>10</span>
+                <span>13</span>
+                <span>17</span>
+                <span>21</span>
                 <span style="text-align: right;">2025</span>
             </div>
         </div>
@@ -224,12 +220,11 @@
         map.addLayer(layer_NeighborhoodClusters_7);
 
         // -----------------------------------------------------------
-        // LABELS: UPDATED FOR SMALLER SIZE AND PROFESSIONAL FONT
+        // LABELS: SCALED DOWN 2X (RETINA HACK)
         // -----------------------------------------------------------
         map.createPane('pane_LabelsWhiteText_8');
         map.getPane('pane_LabelsWhiteText_8').style.zIndex = 408;
         
-        // Changed to Positron (light) labels for professional look
         var layer_LabelsWhiteText_8 = L.tileLayer('https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}@2x.png', {
             pane: 'pane_LabelsWhiteText_8',
             opacity: 1.0,
@@ -238,16 +233,22 @@
             maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 18,
-            // HACK TO REDUCE TEXT SIZE:
-            // We tell Leaflet the tiles are 512px (Retina) but load standard tiles, 
-            // effectively scaling the text down by 50%.
-            tileSize: 512, 
-            zoomOffset: -1,
-            className: 'professional-labels' // Add custom class for font styling
+            
+            // RETINA SCALING HACK: 
+            // 1. tileSize: 128 (Tells Leaflet to fit images into half-size slots)
+            // 2. zoomOffset: 1 (Tells Leaflet to load the NEXT zoom level tiles)
+            // Result: High-res tiles shrunk by 50%. Text is tiny and sharp.
+            tileSize: 128, 
+            zoomOffset: 1 
         });
         map.addLayer(layer_LabelsWhiteText_8);
         
-        // CSS FILTER REMOVED: No longer inverting colors.
+        // CSS FILTER: CLEAN INVERT ONLY
+        // Removed brightness/contrast boost to fix "wide border" blur.
+        var labelPane = map.getPane('pane_LabelsWhiteText_8');
+        if (labelPane) {
+            labelPane.style.filter = 'invert(100%)';
+        }
 
         // Overview (Unchanged)
         function pop_Overview_9(feature, layer) {
@@ -271,29 +272,5 @@
         // Layer Control
         var overlaysTree = [
             {label: '<img src="legend/Overview_9.png" /> Overview', layer: layer_Overview_9},
-            {label: "Labels - Professional", layer: layer_LabelsWhiteText_8},
-            {label: '<img src="legend/NeighborhoodClusters_7.png" /> Neighborhood Clusters', layer: layer_NeighborhoodClusters_7},
-        ];
-        var lay = L.control.layers.tree(null, overlaysTree,{ collapsed: true });
-        lay.addTo(map);
-        setBounds();
-
-        // SLIDER LOGIC
-        var timeLayers = [layer_2007_6, layer_2008_5, layer_2010_4, layer_2013_3, layer_2017_2, layer_2021_1, layer_2025_0];
-        var years = ["2007", "2008", "2010", "2013", "2017", "2021", "2025"];
-        var slider = document.getElementById("yearRange");
-        var label = document.getElementById("yearLabel");
-
-        slider.oninput = function() {
-            var index = this.value; 
-            label.innerHTML = years[index]; 
-            timeLayers.forEach(function(lyr) { map.removeLayer(lyr); });
-            map.addLayer(timeLayers[index]);
-            if(map.hasLayer(layer_LabelsWhiteText_8)) { layer_LabelsWhiteText_8.bringToFront(); }
-            if(map.hasLayer(layer_Overview_9)) { layer_Overview_9.bringToFront(); }
-            if(map.hasLayer(layer_NeighborhoodClusters_7)) { layer_NeighborhoodClusters_7.bringToFront(); }
-        }
-        slider.oninput();
-        </script>        
-    </body>
-</html>
+            {label: "Labels - Compact", layer: layer_LabelsWhiteText_8},
+            {label:
