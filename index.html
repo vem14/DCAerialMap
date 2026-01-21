@@ -36,10 +36,11 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.wms.js"></script>
         <script src="js/leaflet.photon.js"></script>
+        <script src="data/Overview_3.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:14, minZoom:2
-        }).fitBounds([[38.816377819899095,-77.07979752753606],[38.969757172850805,-76.97134779515449]]);
+        }).fitBounds([[38.724483818742,-77.38069814489532],[39.06956716707999,-76.60010619660444]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -138,24 +139,10 @@
         });
         layer_GoogleSatellite_1;
         map.addLayer(layer_GoogleSatellite_1);
-        map.createPane('pane_HistoricBuildingInfo_2');
-        map.getPane('pane_HistoricBuildingInfo_2').style.zIndex = 402;
-        var layer_HistoricBuildingInfo_2 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Historic_WebMercator/MapServer/WMSServer", "0", {
-            pane: 'pane_HistoricBuildingInfo_2',
-            format: 'image/png',
-            uppercase: true,
-            transparent: true,
-            continuousWorld : true,
-            tiled: true,
-            info_format: 'text/html',
-            opacity: 1,
-            attribution: '',
-        });
-        map.addLayer(layer_HistoricBuildingInfo_2);
-        map.createPane('pane_Ortho2010_3');
-        map.getPane('pane_Ortho2010_3').style.zIndex = 403;
-        var layer_Ortho2010_3 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", {
-            pane: 'pane_Ortho2010_3',
+        map.createPane('pane_Ortho2010_2');
+        map.getPane('pane_Ortho2010_2').style.zIndex = 402;
+        var layer_Ortho2010_2 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", {
+            pane: 'pane_Ortho2010_2',
             format: 'image/png',
             uppercase: true,
             transparent: true,
@@ -166,10 +153,41 @@
             identify: false,
             attribution: '',
         });
-        map.addLayer(layer_Ortho2010_3);
+        map.addLayer(layer_Ortho2010_2);
+        function pop_Overview_3(feature, layer) {
+        }
+
+        function style_Overview_3_0() {
+            return {
+                pane: 'pane_Overview_3',
+                opacity: 1,
+                color: 'rgba(247,247,247,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(150,150,150,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Overview_3');
+        map.getPane('pane_Overview_3').style.zIndex = 403;
+        map.getPane('pane_Overview_3').style['mix-blend-mode'] = 'normal';
+        var layer_Overview_3 = new L.geoJson(json_Overview_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Overview_3',
+            layerName: 'layer_Overview_3',
+            pane: 'pane_Overview_3',
+            onEachFeature: pop_Overview_3,
+            style: style_Overview_3_0,
+        });
+        bounds_group.addLayer(layer_Overview_3);
+        map.addLayer(layer_Overview_3);
         var overlaysTree = [
-            {label: "Ortho 2010", layer: layer_Ortho2010_3},
-            {label: "Historic Building Info", layer: layer_HistoricBuildingInfo_2},
+            {label: "Ortho 2010", layer: layer_Ortho2010_2},
             {label: "Google Satellite", layer: layer_GoogleSatellite_1},
             {label: "Google Road", layer: layer_GoogleRoad_0, radioGroup: 'bm' },]
         var lay = L.control.layers.tree(null, overlaysTree,{
