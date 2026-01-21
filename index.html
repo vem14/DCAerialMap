@@ -180,7 +180,7 @@
                 fill: true,
                 fillOpacity: 1,
                 fillColor: 'rgba(150,150,150,1.0)',
-                interactive: true,
+                interactive: false,
             }
         }
         map.createPane('pane_Overview_3');
@@ -188,7 +188,7 @@
         map.getPane('pane_Overview_3').style['mix-blend-mode'] = 'normal';
         var layer_Overview_3 = new L.geoJson(json_Overview_3, {
             attribution: '',
-            interactive: true,
+            interactive: false,
             dataVar: 'json_Overview_3',
             layerName: 'layer_Overview_3',
             pane: 'pane_Overview_3',
@@ -251,7 +251,7 @@
                 lineJoin: 'bevel',
                 weight: 2.0,
                 fillOpacity: 0,
-                interactive: true,
+                interactive: false,
             }
         }
         map.createPane('pane_NeighborhoodClusters_4');
@@ -259,7 +259,7 @@
         map.getPane('pane_NeighborhoodClusters_4').style['mix-blend-mode'] = 'normal';
         var layer_NeighborhoodClusters_4 = new L.geoJson(json_NeighborhoodClusters_4, {
             attribution: '',
-            interactive: true,
+            interactive: false,
             dataVar: 'json_NeighborhoodClusters_4',
             layerName: 'layer_NeighborhoodClusters_4',
             pane: 'pane_NeighborhoodClusters_4',
@@ -279,7 +279,6 @@
             tiled: true,
             info_format: 'text/html',
             opacity: 0,
-            identify: false,
             attribution: '',
         });
         map.addLayer(layer_RoadsAll_5);
