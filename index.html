@@ -136,48 +136,54 @@
         }
 
         // ----------------------------------------------------------
-        // IMAGERY LAYERS (XYZ Tiles for Zooming)
+        // IMAGERY LAYERS (FIXED: Tiled WMS with Zoom Cap)
         // ----------------------------------------------------------
         
+        // This setting tells Leaflet: "Ask the server for tiles up to zoom 19.
+        // If the user goes to 20+, just stretch the zoom 19 tiles."
         var imgSettings = {
+            layers: '0',
             format: 'image/png',
             transparent: true,
-            maxNativeZoom: 19, // The server stops here
-            maxZoom: 22        // Allow user to zoom past
+            maxNativeZoom: 19, 
+            maxZoom: 22        
         };
 
+        // Note: We use L.tileLayer.wms (Standard WMS) instead of L.WMS.layer (Single Tile)
+        // This supports the 'maxNativeZoom' trick.
+
         map.createPane('pane_2025_0'); map.getPane('pane_2025_0').style.zIndex = 400;
-        var layer_2025_0 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2025_0 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2025_0'}, imgSettings));
         map.addLayer(layer_2025_0);
 
         map.createPane('pane_2021'); map.getPane('pane_2021').style.zIndex = 401;
-        var layer_2021 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2021_WebMercator/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2021 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2021_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2021'}, imgSettings));
         map.addLayer(layer_2021);
 
         map.createPane('pane_2017'); map.getPane('pane_2017').style.zIndex = 402;
-        var layer_2017 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2017_WebMercator/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2017 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2017_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2017'}, imgSettings));
         map.addLayer(layer_2017);
 
         map.createPane('pane_2013'); map.getPane('pane_2013').style.zIndex = 403;
-        var layer_2013 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2013_WebMercator/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2013 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2013_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2013'}, imgSettings));
         map.addLayer(layer_2013);
 
         map.createPane('pane_2010'); map.getPane('pane_2010').style.zIndex = 404;
-        var layer_2010 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2010 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2010'}, imgSettings));
         map.addLayer(layer_2010);
 
         map.createPane('pane_2008'); map.getPane('pane_2008').style.zIndex = 405;
-        var layer_2008 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/08Ortho/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2008 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/08Ortho/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2008'}, imgSettings));
         map.addLayer(layer_2008);
 
         map.createPane('pane_2007'); map.getPane('pane_2007').style.zIndex = 406;
-        var layer_2007 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/07Ortho/MapServer/tile/{z}/{y}/{x}", 
+        var layer_2007 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/07Ortho/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2007'}, imgSettings));
         map.addLayer(layer_2007);
 
@@ -208,7 +214,6 @@
         map.createPane('pane_LabelsWhiteText_2');
         map.getPane('pane_LabelsWhiteText_2').style.zIndex = 408;
         
-        // Changed to light_only_labels @2x with tileSize 256 for sharpness
         var layer_LabelsWhiteText_2 = L.tileLayer('https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}@2x.png', {
             pane: 'pane_LabelsWhiteText_2',
             opacity: 1.0,
@@ -222,7 +227,6 @@
         });
         map.addLayer(layer_LabelsWhiteText_2);
         
-        // Apply Invert Filter to Pane to get White text
         var labelPane = map.getPane('pane_LabelsWhiteText_2');
         if (labelPane) {
             labelPane.style.filter = 'invert(100%)';
