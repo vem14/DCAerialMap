@@ -39,8 +39,8 @@
         <script src="data/Overview_3.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:14, minZoom:2
-        }).fitBounds([[38.724483818742,-77.38069814489532],[39.06956716707999,-76.60010619660444]]);
+            zoomControl:false, maxZoom:28, minZoom:16
+        }).fitBounds([[38.8581937602029,-77.1118891677411],[38.944459653194365,-76.91674118066838]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -119,8 +119,8 @@
             pane: 'pane_GoogleRoad_0',
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
-            minZoom: 2,
-            maxZoom: 14,
+            minZoom: 16,
+            maxZoom: 28,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
@@ -132,8 +132,8 @@
             pane: 'pane_GoogleSatellite_1',
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
-            minZoom: 2,
-            maxZoom: 14,
+            minZoom: 16,
+            maxZoom: 28,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
@@ -187,6 +187,7 @@
         bounds_group.addLayer(layer_Overview_3);
         map.addLayer(layer_Overview_3);
         var overlaysTree = [
+            {label: '<img src="legend/Overview_3.png" /> Overview', layer: layer_Overview_3},
             {label: "Ortho 2010", layer: layer_Ortho2010_2},
             {label: "Google Satellite", layer: layer_GoogleSatellite_1},
             {label: "Google Road", layer: layer_GoogleRoad_0, radioGroup: 'bm' },]
