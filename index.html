@@ -36,12 +36,12 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.wms.js"></script>
         <script src="js/leaflet.photon.js"></script>
+        <script src="data/NeighborhoodClusters_2.js"></script>
         <script src="data/Overview_4.js"></script>
-        <script src="data/NeighborhoodClusters_5.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:20, minZoom:14
-        }).fitBounds([[38.62001723620454,-77.28645417028885],[39.17584352542345,-76.76472293005524]]);
+            zoomControl:false, maxZoom:15, minZoom:3
+        }).fitBounds([[38.600657511491015,-77.27820701240086],[39.15663471109485,-76.75647577217154]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -114,36 +114,23 @@
             map.setMaxBounds(map.getBounds());
             map.setMinZoom(map.getZoom());
         }
-        map.createPane('pane_GoogleRoad_0');
-        map.getPane('pane_GoogleRoad_0').style.zIndex = 400;
-        var layer_GoogleRoad_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            pane: 'pane_GoogleRoad_0',
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
-            minZoom: 14,
-            maxZoom: 20,
+            minZoom: 3,
+            maxZoom: 15,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
-        layer_GoogleRoad_0;
-        map.addLayer(layer_GoogleRoad_0);
-        map.createPane('pane_GoogleSatellite_1');
-        map.getPane('pane_GoogleSatellite_1').style.zIndex = 401;
-        var layer_GoogleSatellite_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            pane: 'pane_GoogleSatellite_1',
-            opacity: 1.0,
-            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
-            minZoom: 14,
-            maxZoom: 20,
-            minNativeZoom: 0,
-            maxNativeZoom: 20
-        });
-        layer_GoogleSatellite_1;
-        map.addLayer(layer_GoogleSatellite_1);
-        map.createPane('pane_Ortho2010_2');
-        map.getPane('pane_Ortho2010_2').style.zIndex = 402;
-        var layer_Ortho2010_2 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", {
-            pane: 'pane_Ortho2010_2',
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        map.createPane('pane_Ortho2010_1');
+        map.getPane('pane_Ortho2010_1').style.zIndex = 401;
+        var layer_Ortho2010_1 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", {
+            pane: 'pane_Ortho2010_1',
             format: 'image/png',
             uppercase: true,
             transparent: true,
@@ -154,15 +141,86 @@
             identify: false,
             attribution: '',
         });
-        map.addLayer(layer_Ortho2010_2);
+        map.addLayer(layer_Ortho2010_1);
+        function pop_NeighborhoodClusters_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NBH_NAMES'] !== null ? autolinker.link(String(feature.properties['NBH_NAMES']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td class="visible-with-data" id="NAME">' + (feature.properties['NAME'] !== null ? autolinker.link(String(feature.properties['NAME']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WEB_URL'] !== null ? autolinker.link(String(feature.properties['WEB_URL']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TYPE'] !== null ? autolinker.link(String(feature.properties['TYPE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GIS_ID'] !== null ? autolinker.link(String(feature.properties['GIS_ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GLOBALID'] !== null ? autolinker.link(String(feature.properties['GLOBALID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATED'] !== null ? autolinker.link(String(feature.properties['CREATED']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['EDITED'] !== null ? autolinker.link(String(feature.properties['EDITED']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE.AREA'] !== null ? autolinker.link(String(feature.properties['SHAPE.AREA']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE.LEN'] !== null ? autolinker.link(String(feature.properties['SHAPE.LEN']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(String(feature.properties['OBJECTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_NeighborhoodClusters_2_0() {
+            return {
+                pane: 'pane_NeighborhoodClusters_2',
+                opacity: 1,
+                color: 'rgba(53,121,177,1.0)',
+                dashArray: '8.0,4.0',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_NeighborhoodClusters_2');
+        map.getPane('pane_NeighborhoodClusters_2').style.zIndex = 402;
+        map.getPane('pane_NeighborhoodClusters_2').style['mix-blend-mode'] = 'normal';
+        var layer_NeighborhoodClusters_2 = new L.geoJson(json_NeighborhoodClusters_2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_NeighborhoodClusters_2',
+            layerName: 'layer_NeighborhoodClusters_2',
+            pane: 'pane_NeighborhoodClusters_2',
+            onEachFeature: pop_NeighborhoodClusters_2,
+            style: style_NeighborhoodClusters_2_0,
+        });
+        bounds_group.addLayer(layer_NeighborhoodClusters_2);
+        map.addLayer(layer_NeighborhoodClusters_2);
         map.createPane('pane_LabelsWhiteText_3');
         map.getPane('pane_LabelsWhiteText_3').style.zIndex = 403;
-        var layer_LabelsWhiteText_3 = L.tileLayer('https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@2x.png', {
+        var layer_LabelsWhiteText_3 = L.tileLayer('https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}@1x.png', {
             pane: 'pane_LabelsWhiteText_3',
             opacity: 1.0,
             attribution: '',
-            minZoom: 14,
-            maxZoom: 20,
+            minZoom: 3,
+            maxZoom: 15,
             minNativeZoom: 0,
             maxNativeZoom: 18
         });
@@ -210,96 +268,12 @@
         });
         bounds_group.addLayer(layer_Overview_4);
         map.addLayer(layer_Overview_4);
-        function pop_NeighborhoodClusters_5(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['NBH_NAMES'] !== null ? autolinker.link(String(feature.properties['NBH_NAMES']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Name</th>\
-                        <td class="visible-with-data" id="NAME">' + (feature.properties['NAME'] !== null ? autolinker.link(String(feature.properties['NAME']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['WEB_URL'] !== null ? autolinker.link(String(feature.properties['WEB_URL']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['TYPE'] !== null ? autolinker.link(String(feature.properties['TYPE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['GIS_ID'] !== null ? autolinker.link(String(feature.properties['GIS_ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['GLOBALID'] !== null ? autolinker.link(String(feature.properties['GLOBALID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['CREATED'] !== null ? autolinker.link(String(feature.properties['CREATED']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['EDITED'] !== null ? autolinker.link(String(feature.properties['EDITED']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['SHAPE.AREA'] !== null ? autolinker.link(String(feature.properties['SHAPE.AREA']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['SHAPE.LEN'] !== null ? autolinker.link(String(feature.properties['SHAPE.LEN']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(String(feature.properties['OBJECTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_NeighborhoodClusters_5_0() {
-            return {
-                pane: 'pane_NeighborhoodClusters_5',
-                opacity: 1,
-                color: 'rgba(53,121,177,1.0)',
-                dashArray: '8.0,4.0',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                weight: 2.0,
-                fillOpacity: 0,
-                interactive: false,
-            }
-        }
-        map.createPane('pane_NeighborhoodClusters_5');
-        map.getPane('pane_NeighborhoodClusters_5').style.zIndex = 405;
-        map.getPane('pane_NeighborhoodClusters_5').style['mix-blend-mode'] = 'normal';
-        var layer_NeighborhoodClusters_5 = new L.geoJson(json_NeighborhoodClusters_5, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json_NeighborhoodClusters_5',
-            layerName: 'layer_NeighborhoodClusters_5',
-            pane: 'pane_NeighborhoodClusters_5',
-            onEachFeature: pop_NeighborhoodClusters_5,
-            style: style_NeighborhoodClusters_5_0,
-        });
-        bounds_group.addLayer(layer_NeighborhoodClusters_5);
-        map.addLayer(layer_NeighborhoodClusters_5);
-        map.on("zoomend", function(e) {
-            if (map.getZoom() <= 19 && map.getZoom() >= 12) {
-                map.addLayer(layer_LabelsWhiteText_3);
-            } else if (map.getZoom() > 19 || map.getZoom() < 12) {
-                map.removeLayer(layer_LabelsWhiteText_3);
-            }
-        });
-            if (map.getZoom() <= 19 && map.getZoom() >= 12) {
-                map.addLayer(layer_LabelsWhiteText_3);
-            } else if (map.getZoom() > 19 || map.getZoom() < 12) {
-                map.removeLayer(layer_LabelsWhiteText_3);
-            }
         var overlaysTree = [
-            {label: '<img src="legend/NeighborhoodClusters_5.png" /> Neighborhood Clusters', layer: layer_NeighborhoodClusters_5},
             {label: '<img src="legend/Overview_4.png" /> Overview', layer: layer_Overview_4},
             {label: "Labels - White Text", layer: layer_LabelsWhiteText_3},
-            {label: "Ortho 2010", layer: layer_Ortho2010_2},
-            {label: "Google Satellite", layer: layer_GoogleSatellite_1},
-            {label: "Google Road", layer: layer_GoogleRoad_0, radioGroup: 'bm' },]
+            {label: '<img src="legend/NeighborhoodClusters_2.png" /> Neighborhood Clusters', layer: layer_NeighborhoodClusters_2},
+            {label: "Ortho 2010", layer: layer_Ortho2010_1},
+            {label: "Google Satellite", layer: layer_GoogleSatellite_0, radioGroup: 'bm' },]
         var lay = L.control.layers.tree(null, overlaysTree,{
             //namedToggle: true,
             //selectorBack: false,
