@@ -17,7 +17,7 @@
             height: 100%;
             padding: 0;
             margin: 0;
-            background: #202020; /* Dark background prevents flashing */
+            background: #202020; /* Dark background to hide loading flicker */
         }
         /* Styles for the slider ticks */
         .tick-container span {
@@ -77,7 +77,7 @@
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:22, minZoom:1
-        }).fitBounds([[38.74769562155879,-77.16047526900876],[39.02565469078042,-76.8996096488941]]);
+        }).fitBounds([[38.81852942133301,-77.10583841412921],[38.95750656407127,-76.97540560407187]]);
         
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
@@ -136,21 +136,20 @@
         }
 
         // ----------------------------------------------------------
-        // IMAGERY LAYERS (Converted to XYZ Tiles for better zooming)
+        // IMAGERY LAYERS (XYZ Tiles for Zooming)
         // ----------------------------------------------------------
         
-        // Define common settings to enable "stretching" past zoom 19
         var imgSettings = {
             format: 'image/png',
             transparent: true,
             maxNativeZoom: 19, // The server stops here
-            maxZoom: 22        // Allow user to zoom past, stretching the image
+            maxZoom: 22        // Allow user to zoom past
         };
 
-        map.createPane('pane_2025'); map.getPane('pane_2025').style.zIndex = 400;
-        var layer_2025 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/tile/{z}/{y}/{x}", 
-            Object.assign({pane: 'pane_2025'}, imgSettings));
-        map.addLayer(layer_2025);
+        map.createPane('pane_2025_0'); map.getPane('pane_2025_0').style.zIndex = 400;
+        var layer_2025_0 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/tile/{z}/{y}/{x}", 
+            Object.assign({pane: 'pane_2025_0'}, imgSettings));
+        map.addLayer(layer_2025_0);
 
         map.createPane('pane_2021'); map.getPane('pane_2021').style.zIndex = 401;
         var layer_2021 = L.tileLayer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2021_WebMercator/MapServer/tile/{z}/{y}/{x}", 
@@ -209,7 +208,7 @@
         map.createPane('pane_LabelsWhiteText_2');
         map.getPane('pane_LabelsWhiteText_2').style.zIndex = 408;
         
-        // Light_Only @2x with tileSize 256 for "Image Squeeze" effect
+        // Changed to light_only_labels @2x with tileSize 256 for sharpness
         var layer_LabelsWhiteText_2 = L.tileLayer('https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}@2x.png', {
             pane: 'pane_LabelsWhiteText_2',
             opacity: 1.0,
@@ -218,12 +217,12 @@
             maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 18,
-            tileSize: 256, // Squeeze 512px image into 256px slot
+            tileSize: 256, // Squeeze effect
             zoomOffset: 0
         });
         map.addLayer(layer_LabelsWhiteText_2);
         
-        // Apply Invert Filter to Pane
+        // Apply Invert Filter to Pane to get White text
         var labelPane = map.getPane('pane_LabelsWhiteText_2');
         if (labelPane) {
             labelPane.style.filter = 'invert(100%)';
@@ -265,7 +264,7 @@
         // ----------------------------------------------------------
         // SLIDER LOGIC
         // ----------------------------------------------------------
-        var timeLayers = [layer_2007, layer_2008, layer_2010, layer_2013, layer_2017, layer_2021, layer_2025];
+        var timeLayers = [layer_2007, layer_2008, layer_2010, layer_2013, layer_2017, layer_2021, layer_2025_0];
         var years = ["2007", "2008", "2010", "2013", "2017", "2021", "2025"];
         var slider = document.getElementById("yearRange");
         var label = document.getElementById("yearLabel");
@@ -280,7 +279,7 @@
             });
             map.addLayer(timeLayers[index]);
             
-            // Keep Overlays on Top (Safety Check)
+            // Keep Overlays on Top
             if(map.hasLayer(layer_LabelsWhiteText_2)) { layer_LabelsWhiteText_2.bringToFront(); }
             if(map.hasLayer(layer_Overview_3)) { layer_Overview_3.bringToFront(); }
             if(map.hasLayer(layer_NeighborhoodClusters_1)) { layer_NeighborhoodClusters_1.bringToFront(); }
