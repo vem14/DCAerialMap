@@ -27,6 +27,7 @@
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -36,11 +37,13 @@
         <script src="js/labels.js"></script>
         <script src="js/leaflet.wms.js"></script>
         <script src="js/leaflet.photon.js"></script>
-        <script src="data/Overview_3.js"></script>
+        <script src="data/Overview_4.js"></script>
+        <script src="data/RoadsAll_5.js"></script>
+        <script src="data/NeighborhoodClusters_6.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:28, minZoom:16
-        }).fitBounds([[38.8581937602029,-77.1118891677411],[38.944459653194365,-76.91674118066838]]);
+            zoomControl:false, maxZoom:20, minZoom:28
+        }).fitBounds([[38.87539344888388,-77.06617069071957],[38.94486041769983,-77.00095428569037]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -119,8 +122,8 @@
             pane: 'pane_GoogleRoad_0',
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
-            minZoom: 16,
-            maxZoom: 28,
+            minZoom: 28,
+            maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
@@ -132,17 +135,31 @@
             pane: 'pane_GoogleSatellite_1',
             opacity: 1.0,
             attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
-            minZoom: 16,
-            maxZoom: 28,
+            minZoom: 28,
+            maxZoom: 20,
             minNativeZoom: 0,
             maxNativeZoom: 20
         });
         layer_GoogleSatellite_1;
         map.addLayer(layer_GoogleSatellite_1);
-        map.createPane('pane_Ortho2010_2');
-        map.getPane('pane_Ortho2010_2').style.zIndex = 402;
-        var layer_Ortho2010_2 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", {
-            pane: 'pane_Ortho2010_2',
+        map.createPane('pane_HistoricBuildingInfo_2');
+        map.getPane('pane_HistoricBuildingInfo_2').style.zIndex = 402;
+        var layer_HistoricBuildingInfo_2 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Historic_WebMercator/MapServer/WMSServer", "0", {
+            pane: 'pane_HistoricBuildingInfo_2',
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            attribution: '',
+        });
+        map.addLayer(layer_HistoricBuildingInfo_2);
+        map.createPane('pane_Ortho2010_3');
+        map.getPane('pane_Ortho2010_3').style.zIndex = 403;
+        var layer_Ortho2010_3 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", {
+            pane: 'pane_Ortho2010_3',
             format: 'image/png',
             uppercase: true,
             transparent: true,
@@ -153,13 +170,13 @@
             identify: false,
             attribution: '',
         });
-        map.addLayer(layer_Ortho2010_2);
-        function pop_Overview_3(feature, layer) {
+        map.addLayer(layer_Ortho2010_3);
+        function pop_Overview_4(feature, layer) {
         }
 
-        function style_Overview_3_0() {
+        function style_Overview_4_0() {
             return {
-                pane: 'pane_Overview_3',
+                pane: 'pane_Overview_4',
                 opacity: 1,
                 color: 'rgba(247,247,247,1.0)',
                 dashArray: '',
@@ -172,23 +189,178 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_Overview_3');
-        map.getPane('pane_Overview_3').style.zIndex = 403;
-        map.getPane('pane_Overview_3').style['mix-blend-mode'] = 'normal';
-        var layer_Overview_3 = new L.geoJson(json_Overview_3, {
+        map.createPane('pane_Overview_4');
+        map.getPane('pane_Overview_4').style.zIndex = 404;
+        map.getPane('pane_Overview_4').style['mix-blend-mode'] = 'normal';
+        var layer_Overview_4 = new L.geoJson(json_Overview_4, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Overview_3',
-            layerName: 'layer_Overview_3',
-            pane: 'pane_Overview_3',
-            onEachFeature: pop_Overview_3,
-            style: style_Overview_3_0,
+            dataVar: 'json_Overview_4',
+            layerName: 'layer_Overview_4',
+            pane: 'pane_Overview_4',
+            onEachFeature: pop_Overview_4,
+            style: style_Overview_4_0,
         });
-        bounds_group.addLayer(layer_Overview_3);
-        map.addLayer(layer_Overview_3);
+        bounds_group.addLayer(layer_Overview_4);
+        map.addLayer(layer_Overview_4);
+        function pop_RoadsAll_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FEATURECODE'] !== null ? autolinker.link(String(feature.properties['FEATURECODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DESCRIPTION'] !== null ? autolinker.link(String(feature.properties['DESCRIPTION']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CAPTUREYEAR'] !== null ? autolinker.link(String(feature.properties['CAPTUREYEAR']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CAPTUREACTION'] !== null ? autolinker.link(String(feature.properties['CAPTUREACTION']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GIS_ID'] !== null ? autolinker.link(String(feature.properties['GIS_ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(String(feature.properties['OBJECTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RoadsAll_5_0() {
+            return {
+                pane: 'pane_RoadsAll_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(137,137,137,0.22745098039215686)',
+                interactive: true,
+            }
+        }
+        function style_RoadsAll_5_1() {
+            return {
+                pane: 'pane_RoadsAll_5',
+                opacity: 1,
+                color: 'rgba(62,62,62,0.3215686274509804)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_RoadsAll_5');
+        map.getPane('pane_RoadsAll_5').style.zIndex = 405;
+        map.getPane('pane_RoadsAll_5').style['mix-blend-mode'] = 'normal';
+        var layer_RoadsAll_5 = new L.geoJson.multiStyle(json_RoadsAll_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RoadsAll_5',
+            layerName: 'layer_RoadsAll_5',
+            pane: 'pane_RoadsAll_5',
+            onEachFeature: pop_RoadsAll_5,
+            styles: [style_RoadsAll_5_0,style_RoadsAll_5_1,]
+        });
+        bounds_group.addLayer(layer_RoadsAll_5);
+        map.addLayer(layer_RoadsAll_5);
+        function pop_NeighborhoodClusters_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NBH_NAMES'] !== null ? autolinker.link(String(feature.properties['NBH_NAMES']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(String(feature.properties['NAME']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WEB_URL'] !== null ? autolinker.link(String(feature.properties['WEB_URL']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TYPE'] !== null ? autolinker.link(String(feature.properties['TYPE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GIS_ID'] !== null ? autolinker.link(String(feature.properties['GIS_ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GLOBALID'] !== null ? autolinker.link(String(feature.properties['GLOBALID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATED'] !== null ? autolinker.link(String(feature.properties['CREATED']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['EDITED'] !== null ? autolinker.link(String(feature.properties['EDITED']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE.AREA'] !== null ? autolinker.link(String(feature.properties['SHAPE.AREA']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE.LEN'] !== null ? autolinker.link(String(feature.properties['SHAPE.LEN']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(String(feature.properties['OBJECTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_NeighborhoodClusters_6_0() {
+            return {
+                pane: 'pane_NeighborhoodClusters_6',
+                opacity: 1,
+                color: 'rgba(53,121,177,1.0)',
+                dashArray: '8.0,4.0',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_NeighborhoodClusters_6');
+        map.getPane('pane_NeighborhoodClusters_6').style.zIndex = 406;
+        map.getPane('pane_NeighborhoodClusters_6').style['mix-blend-mode'] = 'normal';
+        var layer_NeighborhoodClusters_6 = new L.geoJson(json_NeighborhoodClusters_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_NeighborhoodClusters_6',
+            layerName: 'layer_NeighborhoodClusters_6',
+            pane: 'pane_NeighborhoodClusters_6',
+            onEachFeature: pop_NeighborhoodClusters_6,
+            style: style_NeighborhoodClusters_6_0,
+        });
+        bounds_group.addLayer(layer_NeighborhoodClusters_6);
+        map.addLayer(layer_NeighborhoodClusters_6);
+        map.on("zoomend", function(e) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 16) {
+                map.addLayer(layer_RoadsAll_5);
+            } else if (map.getZoom() > 19 || map.getZoom() < 16) {
+                map.removeLayer(layer_RoadsAll_5);
+            }
+        });
+            if (map.getZoom() <= 19 && map.getZoom() >= 16) {
+                map.addLayer(layer_RoadsAll_5);
+            } else if (map.getZoom() > 19 || map.getZoom() < 16) {
+                map.removeLayer(layer_RoadsAll_5);
+            }
         var overlaysTree = [
-            {label: '<img src="legend/Overview_3.png" /> Overview', layer: layer_Overview_3},
-            {label: "Ortho 2010", layer: layer_Ortho2010_2},
+            {label: '<img src="legend/NeighborhoodClusters_6.png" /> Neighborhood Clusters', layer: layer_NeighborhoodClusters_6},
+            {label: '<img src="legend/RoadsAll_5.png" /> Roads (All)', layer: layer_RoadsAll_5},
+            {label: '<img src="legend/Overview_4.png" /> Overview', layer: layer_Overview_4},
+            {label: "Ortho 2010", layer: layer_Ortho2010_3},
+            {label: "Historic Building Info", layer: layer_HistoricBuildingInfo_2},
             {label: "Google Satellite", layer: layer_GoogleSatellite_1},
             {label: "Google Road", layer: layer_GoogleRoad_0, radioGroup: 'bm' },]
         var lay = L.control.layers.tree(null, overlaysTree,{
