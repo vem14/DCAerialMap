@@ -19,7 +19,6 @@
             margin: 0;
             background: #202020;
         }
-        /* Styles for the slider ticks */
         .tick-container span {
             position: relative;
             text-align: center;
@@ -39,13 +38,10 @@
     <body>
         
         <div id="slider-container" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(255,255,255,0.95); padding: 5px 10px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; font-family: sans-serif; width: 40%; max-width: 350px;">
-            
             <div style="margin-bottom: 2px; font-size: 10px; color: #444; letter-spacing: 0.5px; text-transform: uppercase;">
                 Imagery Year: <strong><span id="yearLabel" style="color: #0078A8; font-size: 12px;">2025</span></strong>
             </div>
-
             <input type="range" id="yearRange" min="0" max="6" value="6" step="1" style="width: 100%; cursor: pointer; margin: 0;">
-            
             <div class="tick-container" style="display: flex; justify-content: space-between; margin-top: 0px; color: #666; font-size: 8px;">
                 <span style="text-align: left;">2007</span>
                 <span>2008</span>
@@ -57,8 +53,7 @@
             </div>
         </div>
 
-        <div id="map">
-        </div>
+        <div id="map"></div>
         
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
@@ -76,11 +71,11 @@
         <script src="data/Overview_3.js"></script>
         <script>
         
-        // MAP SETUP: Max Zoom capped at 19 to match Server Limits
+        // 1. MAP SETUP: Allow zooming up to 22 (Digital Zoom)
         var map = L.map('map', {
             zoomControl:false, 
             attributionControl: false, 
-            maxZoom: 19, // Capped to prevent "Blank Screen" bug
+            maxZoom: 22, // High limit to allow pixel-peeping
             minZoom: 1
         }).fitBounds([[38.81852942133301,-77.10583841412921],[38.95750656407127,-76.97540560407187]]);
         
@@ -140,53 +135,55 @@
         }
 
         // ----------------------------------------------------------
-        // IMAGERY LAYERS (RESTORED TO L.WMS.layer)
+        // IMAGERY LAYERS (The "WMS as Tiles" Fix)
         // ----------------------------------------------------------
         
-        // Settings for WMS
+        // This configuration is critical:
+        // 1. layers: '0' -> Tells WMS which layer to grab
+        // 2. maxNativeZoom: 19 -> Stops asking server for new data after Zoom 19
+        // 3. maxZoom: 22 -> Allows map to keep zooming (stretching the pixels)
         var wmsSettings = {
+            layers: '0', 
             format: 'image/png',
-            uppercase: true,
             transparent: true,
-            continuousWorld : true,
-            tiled: true,
-            info_format: 'text/html',
-            opacity: 1,
-            identify: false
+            uppercase: true,
+            maxNativeZoom: 19,
+            maxZoom: 22
         };
 
+        // We use L.tileLayer.wms to support tiling + maxNativeZoom logic
         map.createPane('pane_2025_0'); map.getPane('pane_2025_0').style.zIndex = 400;
-        var layer_2025 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/WMSServer", "0", 
+        var layer_2025 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2025_0'}, wmsSettings));
         map.addLayer(layer_2025);
 
         map.createPane('pane_2021'); map.getPane('pane_2021').style.zIndex = 401;
-        var layer_2021 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2021_WebMercator/MapServer/WMSServer", "0", 
+        var layer_2021 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2021_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2021'}, wmsSettings));
         map.addLayer(layer_2021);
 
         map.createPane('pane_2017'); map.getPane('pane_2017').style.zIndex = 402;
-        var layer_2017 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2017_WebMercator/MapServer/WMSServer", "0", 
+        var layer_2017 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2017_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2017'}, wmsSettings));
         map.addLayer(layer_2017);
 
         map.createPane('pane_2013'); map.getPane('pane_2013').style.zIndex = 403;
-        var layer_2013 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2013_WebMercator/MapServer/WMSServer", "0", 
+        var layer_2013 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2013_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2013'}, wmsSettings));
         map.addLayer(layer_2013);
 
         map.createPane('pane_2010'); map.getPane('pane_2010').style.zIndex = 404;
-        var layer_2010 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", "0", 
+        var layer_2010 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2010_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2010'}, wmsSettings));
         map.addLayer(layer_2010);
 
         map.createPane('pane_2008'); map.getPane('pane_2008').style.zIndex = 405;
-        var layer_2008 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/08Ortho/MapServer/WMSServer", "0", 
+        var layer_2008 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/08Ortho/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2008'}, wmsSettings));
         map.addLayer(layer_2008);
 
         map.createPane('pane_2007'); map.getPane('pane_2007').style.zIndex = 406;
-        var layer_2007 = L.WMS.layer("https://maps2.dcgis.dc.gov/dcgis/services/07Ortho/MapServer/WMSServer", "0", 
+        var layer_2007 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/07Ortho/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2007'}, wmsSettings));
         map.addLayer(layer_2007);
 
@@ -222,10 +219,10 @@
             opacity: 1.0,
             attribution: '',
             minZoom: 1,
-            maxZoom: 20,
+            maxZoom: 22, // Match the map maxZoom
             minNativeZoom: 0,
             maxNativeZoom: 18,
-            tileSize: 256, // Squeeze effect
+            tileSize: 256, 
             zoomOffset: 0
         });
         map.addLayer(layer_LabelsWhiteText_2);
