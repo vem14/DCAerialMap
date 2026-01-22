@@ -20,13 +20,12 @@
             background: #202020;
         }
 
-        /* --- TICK MARKS (UPDATED FOR ALIGNMENT & COLOR) --- */
+        /* --- TICK MARKS (UPDATED FOR INTERACTIVITY) --- */
         .tick-container {
             display: flex;
             justify-content: space-between;
-            /* 7px margin ensures ticks align with the center of the 14px slider thumb */
             margin: 2px 7px 0 7px; 
-            color: #333; /* Darker text for grey background */
+            color: #333; 
             font-size: 8px;
         }
 
@@ -35,9 +34,18 @@
             display: flex;
             justify-content: center;
             text-align: center;
-            width: 0; /* Zero width ensures perfect center alignment */
+            width: 0; 
             white-space: nowrap;
-            padding-top: 4px; /* Spacing between pipe and text */
+            /* UPDATED: Larger hit area and pointer cursor */
+            padding: 4px 8px; 
+            cursor: pointer; 
+            user-select: none; /* Prevents highlighting text while clicking */
+        }
+
+        /* Add a hover effect so the user knows it's active */
+        .tick-container span:hover {
+            color: #0078A8;
+            font-weight: bold;
         }
 
         .tick-container span::before {
@@ -46,7 +54,8 @@
             top: -10px; 
             font-weight: normal;
             font-size: 8px; 
-            color: #666; /* Darker pipe color */
+            color: #666; 
+            pointer-events: none; /* Let clicks pass through the pipe to the span */
         }
 
         /* --- SCALED NATIVE CONTROLS --- */
@@ -82,7 +91,7 @@
             height: 14px;
             width: 14px;
             border-radius: 50%;
-            background: #0078A8; /* Match your year label blue */
+            background: #0078A8; 
             cursor: pointer;
             margin-top: -5px; 
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
@@ -99,12 +108,12 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
-        /* The Track (UPDATED COLOR) */
+        /* The Track */
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #999; /* Darker grey to stand out against background */
+            background: #999; 
             border-radius: 2px;
         }
 
@@ -112,7 +121,7 @@
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #999; /* Darker grey */
+            background: #999; 
             border-radius: 2px;
         }
         </style>
@@ -126,12 +135,10 @@
             left: 50%; 
             transform: translateX(-50%); 
             z-index: 1000; 
-            /* UPDATED: Darker grey background */
-            background: rgba(225, 225, 225, 0.85); 
+            background: rgba(225, 225, 225, 0.8); 
             backdrop-filter: blur(3px);
             padding: 8px 12px; 
             border-radius: 4px; 
-            /* UPDATED: Darker border */
             border: 1px solid #999; 
             box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
             text-align: center; 
@@ -180,8 +187,7 @@
             attributionControl: false, 
             maxZoom: 22, 
             minZoom: 1
-        // MODIFIED: Latitudes increased by ~0.005 to shift view North
-        }).fitBounds([[38.823529,-77.105838],[38.962506,-76.975405]]);
+        }).fitBounds([[38.823529,-77.105838],[38.962506,-76.975405]]); // Coordinates shifted North
         
         var hash = new L.Hash(map);
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -384,6 +390,16 @@
             if(map.hasLayer(layer_Overview_3)) { layer_Overview_3.bringToFront(); }
             if(map.hasLayer(layer_NeighborhoodClusters_1)) { layer_NeighborhoodClusters_1.bringToFront(); }
         }
+
+        // NEW: CLICKABLE LABELS LOGIC
+        // This finds all spans in the tick-container and triggers the slider update when clicked
+        var tickSpans = document.querySelectorAll('.tick-container span');
+        tickSpans.forEach(function(span, index) {
+            span.onclick = function() {
+                slider.value = index;
+                slider.oninput();
+            };
+        });
         
         slider.oninput();
         </script>        
