@@ -19,6 +19,19 @@
             margin: 0;
             background: #202020;
         }
+        
+        /* --- IOS/MOBILE FULLSCREEN FALLBACK --- */
+        /* If the browser doesn't support the API, we use this class */
+        body.pseudo-fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            background: #202020;
+        }
+
         .tick-container span {
             position: relative;
             text-align: center;
@@ -33,19 +46,15 @@
             color: #888;
         }
 
-        /* --- NEW CSS TO SCALE CONTROLS --- */
-        
-        /* Scale down the Zoom Controls (Top Left) */
+        /* --- SCALED CONTROLS --- */
         .leaflet-control-zoom {
-            transform: scale(0.6); /* Reduced to 60% size */
+            transform: scale(0.6); 
             transform-origin: top left;
             margin-top: 10px !important;
             margin-left: 10px !important;
         }
-
-        /* Scale down the Layers/Lawyers Control (Top Right) */
         .leaflet-control-layers {
-            transform: scale(0.6); /* Reduced to 60% size */
+            transform: scale(0.6); 
             transform-origin: top right;
             margin-top: 10px !important;
             margin-right: 10px !important;
@@ -54,7 +63,7 @@
         /* Fullscreen Button Style */
         #fullscreen-btn {
             position: absolute;
-            top: 60px; /* Positioned below the scaled zoom control */
+            top: 60px; 
             left: 10px;
             z-index: 1000;
             background: white;
@@ -72,6 +81,8 @@
             font-size: 14px;
             border: 2px solid rgba(0,0,0,0.2);
             background-clip: padding-box;
+            /* Prevent double-tap zoom on button */
+            touch-action: manipulation; 
         }
         #fullscreen-btn:hover {
             background-color: #f4f4f4;
@@ -85,7 +96,7 @@
             ⛶
         </div>
 
-        <div id="slider-container" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(255,255,255,0.95); padding: 3px 5px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; font-family: sans-serif; width: 25%; max-width: 200px;">
+        <div id="slider-container" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(255,255,255,0.95); padding: 3px 5px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; font-family: sans-serif; width: 50%; max-width: 450px;">
             <div style="margin-bottom: 0px; font-size: 9px; color: #444; letter-spacing: 0.5px; text-transform: uppercase;">
                 Imagery Year: <strong><span id="yearLabel" style="color: #0078A8; font-size: 10px;">2025</span></strong>
             </div>
@@ -119,24 +130,43 @@
         <script src="data/Overview_3.js"></script>
         <script>
         
-        // --- FULLSCREEN FUNCTION ---
+        // --- ROBUST FULLSCREEN FUNCTION (Works on Android + iOS Fallback) ---
         function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                });
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
+            var doc = window.document;
+            var docEl = doc.documentElement;
+
+            // 1. Check for Native API (Android, Desktop Chrome/Firefox/Edge)
+            var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+            if (requestFullScreen) {
+                // If the browser SUPPORTS the API, use it
+                if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                    requestFullScreen.call(docEl);
+                } else {
+                    cancelFullScreen.call(doc);
                 }
+            } else {
+                // 2. Fallback for iOS (iPhone Safari does NOT support the API)
+                // We toggle a CSS class that forces fixed positioning
+                var body = document.body;
+                if (body.classList.contains('pseudo-fullscreen')) {
+                    body.classList.remove('pseudo-fullscreen');
+                } else {
+                    body.classList.add('pseudo-fullscreen');
+                    // Optional: Scroll to remove URL bar on some older mobile browsers
+                    window.scrollTo(0,1); 
+                }
+                // Force Leaflet to resize the map after the transition
+                setTimeout(function() { map.invalidateSize(); }, 200);
             }
         }
 
-        // 1. MAP SETUP: Allow zooming up to 22 (Digital Zoom)
+        // 1. MAP SETUP
         var map = L.map('map', {
             zoomControl:false, 
             attributionControl: false, 
-            maxZoom: 22, // High limit to allow pixel-peeping
+            maxZoom: 22, 
             minZoom: 1
         }).fitBounds([[38.81852942133301,-77.10583841412921],[38.95750656407127,-76.97540560407187]]);
         
@@ -196,13 +226,8 @@
         }
 
         // ----------------------------------------------------------
-        // IMAGERY LAYERS (The "WMS as Tiles" Fix)
+        // IMAGERY LAYERS
         // ----------------------------------------------------------
-        
-        // This configuration is critical:
-        // 1. layers: '0' -> Tells WMS which layer to grab
-        // 2. maxNativeZoom: 19 -> Stops asking server for new data after Zoom 19
-        // 3. maxZoom: 22 -> Allows map to keep zooming (stretching the pixels)
         var wmsSettings = {
             layers: '0', 
             format: 'image/png',
@@ -212,7 +237,6 @@
             maxZoom: 22
         };
 
-        // We use L.tileLayer.wms to support tiling + maxNativeZoom logic
         map.createPane('pane_2025_0'); map.getPane('pane_2025_0').style.zIndex = 400;
         var layer_2025 = L.tileLayer.wms("https://maps2.dcgis.dc.gov/dcgis/services/DCGIS_DATA/Ortho2025_WebMercator/MapServer/WMSServer", 
             Object.assign({pane: 'pane_2025_0'}, wmsSettings));
@@ -280,7 +304,7 @@
             opacity: 1.0,
             attribution: '',
             minZoom: 1,
-            maxZoom: 22, // Match the map maxZoom
+            maxZoom: 22,
             minNativeZoom: 0,
             maxNativeZoom: 18,
             tileSize: 256, 
@@ -318,7 +342,6 @@
         // LAYER CONTROL
         // ----------------------------------------------------------
         var overlaysTree = [
-            //{label: '<img src="legend/Overview_3.png" /> Overview', layer: layer_Overview_3},
             {label: "Labels - Compact", layer: layer_LabelsWhiteText_2},
             {label: '<img src="legend/NeighborhoodClusters_1.png" /> Neighborhood Clusters', layer: layer_NeighborhoodClusters_1},
         ];
@@ -338,19 +361,16 @@
             var index = this.value; 
             label.innerHTML = years[index]; 
             
-            // Toggle Time Layers
             timeLayers.forEach(function(lyr) { 
                 if (map.hasLayer(lyr)) map.removeLayer(lyr); 
             });
             map.addLayer(timeLayers[index]);
             
-            // Keep Overlays on Top
             if(map.hasLayer(layer_LabelsWhiteText_2)) { layer_LabelsWhiteText_2.bringToFront(); }
             if(map.hasLayer(layer_Overview_3)) { layer_Overview_3.bringToFront(); }
             if(map.hasLayer(layer_NeighborhoodClusters_1)) { layer_NeighborhoodClusters_1.bringToFront(); }
         }
         
-        // Initialize Slider
         slider.oninput();
         </script>        
     </body>
