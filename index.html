@@ -127,9 +127,9 @@
             transform: translateX(-50%); 
             z-index: 1000; 
             /* UPDATED: Darker grey background */
-            background: rgba(230, 230, 230, 0.85); 
+            background: rgba(220, 220, 220, 0.95); 
             backdrop-filter: blur(3px);
-            padding: 2px 2px; 
+            padding: 8px 12px; 
             border-radius: 4px; 
             /* UPDATED: Darker border */
             border: 1px solid #999; 
@@ -137,7 +137,7 @@
             text-align: center; 
             font-family: sans-serif; 
             width: 50%; 
-            max-width: 500px;">
+            max-width: 450px;">
             
             <div style="margin-bottom: 6px; font-size: 9px; color: #333; letter-spacing: 0.5px; text-transform: uppercase;">
                 Imagery Year: <strong><span id="yearLabel" style="color: #0078A8; font-size: 10px;">2025</span></strong>
@@ -180,7 +180,8 @@
             attributionControl: false, 
             maxZoom: 22, 
             minZoom: 1
-        }).fitBounds([[38.81852942133301,-77.10583841412921],[38.95750656407127,-76.97540560407187]]);
+        // MODIFIED: Latitudes increased by ~0.005 to shift view North
+        }).fitBounds([[38.823529,-77.105838],[38.962506,-76.975405]]);
         
         var hash = new L.Hash(map);
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
