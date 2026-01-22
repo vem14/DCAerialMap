@@ -241,7 +241,8 @@
         
         var labelPane = map.getPane('pane_LabelsWhiteText_2');
         if (labelPane) {
-            labelPane.style.filter = 'invert(100%)';
+            // Updated to increase brightness by 200% after inversion
+            labelPane.style.filter = 'invert(100%) brightness(200%)';
         }
 
         // ----------------------------------------------------------
