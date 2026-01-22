@@ -20,19 +20,33 @@
             background: #202020;
         }
 
-        /* --- TICK MARKS --- */
+        /* --- TICK MARKS (UPDATED FOR ALIGNMENT & COLOR) --- */
+        .tick-container {
+            display: flex;
+            justify-content: space-between;
+            /* 7px margin ensures ticks align with the center of the 14px slider thumb */
+            margin: 2px 7px 0 7px; 
+            color: #333; /* Darker text for grey background */
+            font-size: 8px;
+        }
+
         .tick-container span {
             position: relative;
+            display: flex;
+            justify-content: center;
             text-align: center;
-            width: 14.28%; 
+            width: 0; /* Zero width ensures perfect center alignment */
+            white-space: nowrap;
+            padding-top: 4px; /* Spacing between pipe and text */
         }
+
         .tick-container span::before {
             content: '|';
-            display: block;
+            position: absolute;
+            top: -10px; 
             font-weight: normal;
-            margin-bottom: 2px;
             font-size: 8px; 
-            color: #999; 
+            color: #666; /* Darker pipe color */
         }
 
         /* --- SCALED NATIVE CONTROLS --- */
@@ -85,12 +99,12 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
-        /* The Track */
+        /* The Track (UPDATED COLOR) */
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #bbb; /* Grey track to match controls */
+            background: #999; /* Darker grey to stand out against background */
             border-radius: 2px;
         }
 
@@ -98,7 +112,7 @@
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #bbb;
+            background: #999; /* Darker grey */
             border-radius: 2px;
         }
         </style>
@@ -112,11 +126,13 @@
             left: 50%; 
             transform: translateX(-50%); 
             z-index: 1000; 
-            background: rgba(245, 245, 245, 0.75); /* Light grey with transparency */
+            /* UPDATED: Darker grey background */
+            background: rgba(220, 220, 220, 0.95); 
             backdrop-filter: blur(3px);
             padding: 8px 12px; 
             border-radius: 4px; 
-            border: 1px solid #ccc; /* Matches Leaflet button borders */
+            /* UPDATED: Darker border */
+            border: 1px solid #999; 
             box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
             text-align: center; 
             font-family: sans-serif; 
@@ -129,14 +145,14 @@
             
             <input type="range" id="yearRange" min="0" max="6" value="6" step="1">
             
-            <div class="tick-container" style="display: flex; justify-content: space-between; margin-top: 2px; color: #555; font-size: 8px;">
-                <span style="text-align: left;">2007</span>
+            <div class="tick-container">
+                <span>2007</span>
                 <span>2008</span>
                 <span>2010</span>
                 <span>2013</span>
                 <span>2017</span>
                 <span>2021</span>
-                <span style="text-align: right;">2025</span>
+                <span>2025</span>
             </div>
         </div>
 
